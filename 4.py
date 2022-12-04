@@ -2,20 +2,14 @@ def get_sections(pairs):
         return [set(range(pairs[i][0], pairs[i][1]+1)) for i in range(0,2)]
 
 def part1(input):
-    count = 0
-    for i in input:
-        sections1, sections2 = get_sections(i)
-        if sections1.issubset(sections2) or sections2.issubset(sections1):
-            count += 1
-    return count
+    return sum(sections[0].issubset(sections[1]) or sections[1].issubset(sections[0])
+        for sections in [get_sections(i) for i in input]
+    )
 
 def part2(input):
-    count = 0
-    for i in input:
-        sections1, sections2 = get_sections(i)
-        if len(sections1 & sections2) > 0:
-            count += 1
-    return count
+    return sum(len(sections[0] & sections[1]) > 0
+        for sections in [get_sections(i) for i in input]
+    )
 
 def main():
     input = []
