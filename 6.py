@@ -1,7 +1,7 @@
 import os
 
 def get_marker_pos(input, marker_len):
-    for i in range(marker_len, len(input)):
+    for i in range(marker_len, len(input)+1):
         chars = input[i-marker_len:i]
         if len(set(chars)) == marker_len:
             return i
