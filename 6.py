@@ -1,11 +1,10 @@
 import os
-from collections import Counter
 
 def get_marker_pos(input, marker_len):
     for i in range(marker_len, len(input)):
         chars = input[i-marker_len:i]
-        counter = Counter(chars)
-        if len(counter) == marker_len:
+        print(chars)
+        if len(set(chars)) == marker_len:
             return i
     return None
 
