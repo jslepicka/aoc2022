@@ -1,74 +1,42 @@
 import os
-
-class dentry:
-    def __init__(self, parent, name):
-        self.name = name
-        self.parent = parent
-        self.children = {}
-        self.size = 0
-        if parent is None:
-            self.path = "/"
-        elif parent.path == "/":
-            self.path = "/" + self.name
-        else:
-            self.path = self.parent.path + "/" + self.name
-            
-    def add_size(self, size):
-        self.size += size
-        if self.parent is not None:
-            self.parent.add_size(size)
-
-    def mkdir(self, dir):
-        newdir = dentry(self, dir)
-        self.children[dir] = newdir
-        return newdir
+from collections import defaultdict
 
 def scan_disk(input):
-    dirs = {}
-    root = dentry(None, "/")
-    dirs["/"] = root
-    curdir = root
+    dir_sizes = defaultdict(int)
+    path = []
     for i in [i.split() for i in input]:
         if i[0] == "$":
             if i[1] == "cd":
                 dir = i[2]
                 if dir == "/":
-                    curdir = root
+                    path = ["ROOT"]
                 elif dir == "..":
-                    curdir = curdir.parent
+                    path.pop()
                 else:
-                    if dir in curdir.children:
-                        curdir = curdir.children[dir]
-                    else:
-                        curdir = curdir.mkdir(dir)
-                        dirs[curdir.path] = curdir
+                    path.append(path[-1] + "/" + dir)
         else:
-            if i[0] == "dir":
-                dir = i[1]
-                if dir not in curdir.children:
-                    newdir = curdir.mkdir(dir)
-                    dirs[newdir.path] = newdir
-            else:
+            if i[0] != "dir":
                 size = int(i[0])
-                curdir.add_size(size)
-    return dirs
+                for p in path:
+                    dir_sizes[p] += size
+    return dir_sizes
 
-def part1(dirs):
+def part1(dir_sizes):
     total = 0
-    for dir in dirs:
-        size = dirs[dir].size
+    for dir in dir_sizes:
+        size = dir_sizes[dir]
         if size <= 100000:
             total += size
     return total
 
-def part2(dirs):
+def part2(dir_sizes):
     total_disk_space = 70000000
     needed_space = 30000000
-    unused_space = total_disk_space - dirs["/"].size
+    unused_space = total_disk_space - dir_sizes["ROOT"]
 
-    sorted_dirs = dict(sorted(dirs.items(), key=lambda item: item[1].size))
+    sorted_dirs = dict(sorted(dir_sizes.items(), key=lambda item: item[1]))
     for dir in sorted_dirs:
-        size = sorted_dirs[dir].size
+        size = sorted_dirs[dir]
         if unused_space + size >= needed_space:
             return size
     return None
@@ -79,9 +47,9 @@ def main():
     with open(day + ".txt") as file:
         input = [x.strip() for x in file.readlines() if x.strip() != ""]
     
-    dirs = scan_disk(input)
-    print("Part 1: " + str(part1(dirs)))
-    print("Part 2: " + str(part2(dirs)))
+    dir_sizes = scan_disk(input)
+    print("Part 1: " + str(part1(dir_sizes)))
+    print("Part 2: " + str(part2(dir_sizes)))
 
 if __name__ == "__main__":
     main()
