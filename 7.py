@@ -24,9 +24,9 @@ class dentry:
         return newdir
 
 def scan_disk(input):
-    dir_sizes = {}
+    dirs = {}
     root = dentry(None, "/")
-    dir_sizes["/"] = root
+    dirs["/"] = root
     curdir = root
     for i in [i.split() for i in input]:
         if i[0] == "$":
@@ -41,32 +41,32 @@ def scan_disk(input):
                         curdir = curdir.children[dir]
                     else:
                         curdir = curdir.mkdir(dir)
-                        dir_sizes[curdir.path] = curdir
+                        dirs[curdir.path] = curdir
         else:
             if i[0] == "dir":
                 dir = i[1]
                 if dir not in curdir.children:
                     newdir = curdir.mkdir(dir)
-                    dir_sizes[newdir.path] = newdir
+                    dirs[newdir.path] = newdir
             else:
                 size = int(i[0])
                 curdir.add_size(size)
-    return dir_sizes  
+    return dirs
 
-def part1(dir_sizes):
+def part1(dirs):
     total = 0
-    for dir in dir_sizes:
-        size = dir_sizes[dir].size
+    for dir in dirs:
+        size = dirs[dir].size
         if size <= 100000:
             total += size
     return total
 
-def part2(dir_sizes):
+def part2(dirs):
     total_disk_space = 70000000
     needed_space = 30000000
-    unused_space = total_disk_space - dir_sizes["/"].size
+    unused_space = total_disk_space - dirs["/"].size
 
-    sorted_dirs = dict(sorted(dir_sizes.items(), key=lambda item: item[1].size))
+    sorted_dirs = dict(sorted(dirs.items(), key=lambda item: item[1].size))
     for dir in sorted_dirs:
         size = sorted_dirs[dir].size
         if unused_space + size >= needed_space:
@@ -79,9 +79,9 @@ def main():
     with open(day + ".txt") as file:
         input = [x.strip() for x in file.readlines() if x.strip() != ""]
     
-    dir_sizes = scan_disk(input)
-    print("Part 1: " + str(part1(dir_sizes)))
-    print("Part 2: " + str(part2(dir_sizes)))
+    dirs = scan_disk(input)
+    print("Part 1: " + str(part1(dirs)))
+    print("Part 2: " + str(part2(dirs)))
 
 if __name__ == "__main__":
     main()
