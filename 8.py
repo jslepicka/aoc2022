@@ -37,30 +37,16 @@ def get_score(trees, x, y):
             if t >= tree_height:
                 break
         if s > 0:
+
             score *= s
     return score
 
-def get_map_max(map):
-    max_x = max(map.keys(), key=lambda x: x[0])[0]
-    max_y = max(map.keys(), key=lambda x: x[1])[1]
-    return max_x, max_y
-
 def part1(trees):
-    num_visible = 0
-    max_x, max_y = get_map_max(trees)
-    for y in range(0, max_y+1):
-        for x in range(0, max_x+1):
-            if is_visible(trees, x, y):
-                num_visible += 1
+    num_visible = sum([is_visible(trees, x, y) for x, y in trees.keys()])
     return num_visible
 
 def part2(trees):
-    scores = {}
-    max_x, max_y = get_map_max(trees)
-    for y in range(0, max_y+1):
-        for x in range(0, max_x+1):
-            scores[(x,y)] = get_score(trees, x, y)
-    return max(scores.values())
+    return max([get_score(trees, x, y) for x, y in trees.keys()])
 
 def main():
     day=os.path.basename(__file__).split('.')[0]
