@@ -1,44 +1,43 @@
 import os
+from functools import reduce
+
+def is_blocked_in_dir(trees, x, y, dx, dy):
+    tree_height = trees[(x,y)]
+    while True:
+        x, y = x+dx, y+dy
+        try:
+            t = trees[(x,y)]
+        except KeyError:
+            break
+        if t >= tree_height:
+            return True
+    return False
 
 def is_visible(trees, x, y):
-    tree_height = trees[(x,y)]
     dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-    blocked = 0
-    for dx, dy in dirs:
-        xx, yy = x, y
-        while True:
-            xx, yy = xx+dx, yy+dy
-            try:
-                t = trees[(xx,yy)]
-            except KeyError:
-                break
-            if t >= tree_height:
-                blocked += 1
-                break
-    if blocked == 4:
+    blocked_dirs = sum([is_blocked_in_dir(trees, x, y, dx, dy) for dx, dy in dirs])
+    if blocked_dirs == 4:
         return False
     return True
 
-def get_score(trees, x, y):
-    score = 1
+def get_score_in_dir(trees, x, y, dx, dy):
     tree_height = trees[(x,y)]
-    dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-    for dx, dy in dirs:
-        xx, yy = x, y
-        s = 0
-        while True:
-            xx, yy = xx+dx, yy+dy
-            try:
-                t = trees[(xx,yy)]
-            except KeyError:
-                break
-            if t <= tree_height:
-                s += 1
-            if t >= tree_height:
-                break
-        if s > 0:
+    score = 0
+    while True:
+        x, y = x+dx, y+dy
+        try:
+            t = trees[(x,y)]
+        except KeyError:
+            break
+        if t <= tree_height:
+            score += 1
+        if t >= tree_height:
+            break
+    return score
 
-            score *= s
+def get_score(trees, x, y):
+    dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    score = reduce(lambda x, y: x * y, [get_score_in_dir(trees, x, y, dx, dy) for dx, dy in dirs])
     return score
 
 def part1(trees):
@@ -50,7 +49,6 @@ def part2(trees):
 
 def main():
     day=os.path.basename(__file__).split('.')[0]
-    input = []
     trees = {}
     with open(day + ".txt") as file:
         input = [x.strip() for x in file.readlines() if x.strip() != ""]
