@@ -5,15 +5,16 @@ def scan_disk(input):
     dir_sizes = defaultdict(int)
     path = []
     for i in [i.split() for i in input]:
+        print(path)
         if i[0] == "$":
             if i[1] == "cd":
                 dir = i[2]
                 if dir == "/":
-                    path = ["ROOT"]
+                    path = ["/"]
                 elif dir == "..":
                     path.pop()
                 else:
-                    path.append(path[-1] + "/" + dir)
+                    path.append((path[-1] if path[-1] != "/" else "") + "/" + dir)
         else:
             if i[0] != "dir":
                 size = int(i[0])
@@ -32,7 +33,7 @@ def part1(dir_sizes):
 def part2(dir_sizes):
     total_disk_space = 70000000
     needed_space = 30000000
-    unused_space = total_disk_space - dir_sizes["ROOT"]
+    unused_space = total_disk_space - dir_sizes["/"]
 
     sorted_dirs = dict(sorted(dir_sizes.items(), key=lambda item: item[1]))
     for dir in sorted_dirs:
