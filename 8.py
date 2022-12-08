@@ -40,9 +40,9 @@ def get_score(trees, x, y):
             score *= s
     return score
 
-def get_map_max(trees):
-    max_x = max(trees.keys(), key=lambda x: x[0])[0]
-    max_y = max(trees.keys(), key=lambda x: x[1])[1]
+def get_map_max(map):
+    max_x = max(map.keys(), key=lambda x: x[0])[0]
+    max_y = max(map.keys(), key=lambda x: x[1])[1]
     return max_x, max_y
 
 def part1(trees):
