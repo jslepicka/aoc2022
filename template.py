@@ -8,7 +8,6 @@ def part2(input):
 
 def main():
     day=os.path.basename(__file__).split('.')[0]
-    input = []
     with open(day + ".txt") as file:
         input = [x.strip() for x in file.readlines() if x.strip() != ""]
 
