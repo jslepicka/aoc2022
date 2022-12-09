@@ -1,6 +1,8 @@
 import os
 from functools import reduce
 
+dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
 def is_blocked_in_dir(trees, x, y, dx, dy):
     tree_height = trees[(x,y)]
     while True:
@@ -14,7 +16,6 @@ def is_blocked_in_dir(trees, x, y, dx, dy):
     return False
 
 def is_visible(trees, x, y):
-    dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
     blocked_dirs = sum([is_blocked_in_dir(trees, x, y, dx, dy) for dx, dy in dirs])
     if blocked_dirs == 4:
         return False
@@ -36,7 +37,6 @@ def get_score_in_dir(trees, x, y, dx, dy):
     return score
 
 def get_score(trees, x, y):
-    dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
     score = reduce(lambda x, y: x * y, [get_score_in_dir(trees, x, y, dx, dy) for dx, dy in dirs])
     return score
 
