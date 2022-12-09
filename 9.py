@@ -1,6 +1,6 @@
 import os
 
-moves = {
+MOVES = {
     'R': (1, 0),
     'L': (-1, 0),
     'U': (0, -1),
@@ -25,9 +25,8 @@ def get_next_pos(head, tail):
 def simulate_rope(input, num_knots):
     knot_pos = [(0,0) for _ in range(num_knots)]
     visited = [{(0,0): 1} for _ in range(num_knots)]
-    for i in input:
-        dir, steps = i
-        dx, dy = moves[dir]
+    for dir, steps in input:
+        dx, dy = MOVES[dir]
         for _ in range(steps):
             knot_pos[0] = knot_pos[0][0] + dx, knot_pos[0][1] + dy
             visited[0][knot_pos[0]] = 1
