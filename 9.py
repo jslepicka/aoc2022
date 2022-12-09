@@ -22,10 +22,10 @@ def get_next_pos(head, tail):
         y = y + 1 if head[1] > tail[1] else y - 1
     return x, y
 
-def simulate_rope(input, num_knots):
+def simulate_rope(motions, num_knots):
     knot_pos = [(0,0) for _ in range(num_knots)]
     visited = [{(0,0): 1} for _ in range(num_knots)]
-    for dir, steps in input:
+    for dir, steps in motions:
         dx, dy = MOVES[dir]
         for _ in range(steps):
             knot_pos[0] = knot_pos[0][0] + dx, knot_pos[0][1] + dy
@@ -34,28 +34,22 @@ def simulate_rope(input, num_knots):
                 if not is_touching(knot_pos[k], knot_pos[k-1]):
                     knot_pos[k] = get_next_pos(knot_pos[k-1], knot_pos[k])
                     visited[k][knot_pos[k]] = 1
-    return len(visited[-1])
-
-def part1(input):
-    return simulate_rope(input, 2)
-
-def part2(input):
-    return simulate_rope(input, 10)
+    return visited
 
 def main():
     day=os.path.basename(__file__).split('.')[0]
-    input = []
     with open(day + ".txt") as file:
-        input = [
+        motions = [
             (dir, int(steps)) for dir, steps in [
-                motions.split() for motions in [
+                motion.split() for motion in [
                     x.strip() for x in file.readlines() if x.strip() != ""
                 ]
             ]
         ]
-
-    print("Part 1: " + str(part1(input)))
-    print("Part 2: " + str(part2(input)))
+    
+    visited = simulate_rope(motions, 10)
+    print("Part 1: " + str(len(visited[1])))
+    print("Part 2: " + str(len(visited[9])))
 
 if __name__ == "__main__":
     main()
