@@ -61,7 +61,6 @@ def part2(input):
     cpu = Cpu(input)
     for y in range(6):
         for x in range(40):
-            #print('\u2588' if abs(x-cpu.x) < 2 else ' ', end='')
             out += '\u2588' if abs(x-cpu.x) < 2 else ' '
             cpu.clock()
         out += '\n'
