@@ -23,13 +23,12 @@ def check_order(a, b):
             result = check_order(left, right)
             if result is not None:
                 return result
-    match len(p1), len(p2):
-        case 0, 0:
-            return None
-        case 0, _:
-            return 1
-        case _, 0:
-            return -1
+    if len(p1) == 0 and len(p2) == 0:
+        return None
+    elif len(p1) == 0:
+        return 1
+    elif len(p2) == 0:
+        return -1
 
 def part1(input):
     result = 0
