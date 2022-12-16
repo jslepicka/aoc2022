@@ -1,7 +1,6 @@
 import os
 import re
-from multiprocessing import Pool, Manager, Event
-from time import sleep
+from multiprocessing import Pool, Manager
 
 def merge_ranges(ranges):
     ranges = sorted(ranges)
@@ -66,7 +65,7 @@ def p2thread(sensors, beacons, start, end, val, done_event):
     return None   
 
 def part2_mt(sensors, beacons, max_row):
-    num_threads = 8
+    num_threads = 4
     if max_row % num_threads != 0:
         print("max_row not evenly divisible by # of threads")
         return None
