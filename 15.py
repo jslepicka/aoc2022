@@ -1,6 +1,7 @@
 import os
 import re
-from multiprocessing import Pool
+from multiprocessing import Pool, Manager, Event
+from time import sleep
 
 def merge_ranges(ranges):
     ranges = sorted(ranges)
@@ -53,33 +54,38 @@ def part2(sensors, beacons):
             return merged[0][1] * 4000000 + row
     return None
 
-def p2thread(sensors, beacons, start, end):
+def p2thread(sensors, beacons, start, end, val, done_event):
     for row in (range(start, end)):
         ranges = get_ranges(sensors, beacons, row)
         d = list(merge_ranges(ranges))
         if len(d) > 1:
-            return d[0][1] * 4000000 + row
+            v = d[0][1] * 4000000 + row
+            val.value = v
+            done_event.set()
+            return v
     return None   
 
 def part2_mt(sensors, beacons, max_row):
-    num_threads = 16
+    num_threads = 8
     if max_row % num_threads != 0:
         print("max_row not evenly divisible by # of threads")
         return None
     rows_per_thread = 4000000 // num_threads
     thread_args = []
+    mgr = Manager()
+    done_event = mgr.Event()
+    val = mgr.Value(int, 0)
     for i in range(num_threads):
         start = i * rows_per_thread
         end = start + rows_per_thread
         if i == num_threads - 1:
             end += 1
-        thread_args.append((sensors, beacons, start, end))
+        thread_args.append((sensors, beacons, start, end, val, done_event))
     with Pool(num_threads) as p:
-        ret = p.starmap(p2thread, thread_args)
-    for x in ret:
-        if x is not None:
-            return x
-    return None
+        for args in thread_args:
+            p.apply_async(p2thread, args=tuple(args))
+        done_event.wait()
+    return val.value
 
 def main():
     day=os.path.basename(__file__).split('.')[0]
