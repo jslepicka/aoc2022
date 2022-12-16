@@ -57,39 +57,16 @@ def main():
     map = {}
     map[(500, 0)] = '+'
     for i in input:
-        coords = i.split(" -> ")
-        last_point = None
-        for x, y in [(int(x), int(y)) for x, y in [c.split(',') for c in coords]]:
-            if last_point is None:
-                map[(x,y)] = "#"
-                last_point = (x, y)
-                #print(f'start line at {x, y}')
-            else:
-                if last_point[0] == x: #x coords same, move in y dir
-                    y_start, y_end = last_point[1], y
-                    #print(f'drawing vertically from {x, y_start} to {x, y_end}')
-                    if y_start > y_end:
-                        dir = -1
-                        y_end -= 1
-                    else:
-                        dir = 1
-                        y_end += 1
-                    for yy in range(y_start, y_end, dir):
-                        map[(x, yy)] = '#'
-                        last_point = (x, yy)
-                elif last_point[1] == y: #y coords same, move in x dir
-                    x_start, x_end = last_point[0], x
-                    #print(f'drawing horizontally from {x_start, y} to {x_end, y}')
-                    if x_start > x_end:
-                        dir = -1
-                        x_end -= 1
-                    else:
-                        dir = 1
-                        x_end += 1
-                    for xx in range(x_start, x_end, dir):
-                        map[(xx, y)] = '#'
-                        last_point = (xx, y)
-
+        points =  [p for p in [c.split(',') for c in i.split(" -> ")]]
+        for p1, p2 in zip(points, points[1:]):
+            x1, y1 = int(p1[0]), int(p1[1])
+            x2, y2 = int(p2[0]), int(p2[1])
+            y_start, y_end = min(y1, y2), max(y1, y2)
+            x_start, x_end = min(x1, x2), max(x1, x2)
+            for y in range(y_start, y_end+1):
+                for x in range(x_start, x_end+1):
+                    map[(x, y)] = '#'
+    draw_map(map)
     print("Part 1: " + str(part1(map.copy())))
     print("Part 2: " + str(part2(map.copy())))
 
