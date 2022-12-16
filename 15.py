@@ -71,10 +71,10 @@ def part2_mt(sensors, beacons, max_row):
         print("max_row not evenly divisible by # of threads")
         return None
     rows_per_thread = 4000000 // num_threads
-    thread_args = []
     mgr = Manager()
     done_event = mgr.Event()
     val = mgr.Value(int, 0)
+    thread_args = []
     for i in range(num_threads):
         start = i * rows_per_thread
         end = start + rows_per_thread
@@ -83,7 +83,7 @@ def part2_mt(sensors, beacons, max_row):
         thread_args.append((sensors, beacons, start, end, val, done_event))
     with Pool(num_threads) as p:
         for args in thread_args:
-            p.apply_async(p2thread, args=tuple(args))
+            p.apply_async(p2thread, args=args)
         done_event.wait()
     return val.value
 
