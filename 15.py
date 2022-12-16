@@ -3,9 +3,9 @@ import re
 from multiprocessing import Pool
 
 def merge_ranges(ranges):
-    ranges = iter(sorted(ranges))
-    ret = [next(ranges)]
-    for r in ranges:
+    ranges = sorted(ranges)
+    ret = [ranges[0]]
+    for r in ranges[1:]:
         start, end = r
         prev_start = ret[-1][0]
         prev_end = ret[-1][1]
