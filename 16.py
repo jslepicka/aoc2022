@@ -13,7 +13,7 @@ def solve(valves, valve_to_int, minutes, valve_states = 0):
             #if we've already been at this location, with this valve_state, we don't
             #need to go down this path again
             state = (loc, valve_states)
-            if state in prev_states:
+            if state in prev_states and pressure_loss <= prev_states[state]:
                 continue
             prev_states[state] = pressure_loss
             if valves[loc]['flow_rate'] != 0:
