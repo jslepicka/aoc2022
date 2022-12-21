@@ -28,7 +28,6 @@ def main():
     with open(day + ".txt") as file:
         input = [int(x) for x in [x.strip() for x in file.readlines() if x.strip() != ""]]
 
-    print(input)
     print("Part 1: " + str(part1(input)))
     print("Part 2: " + str(part2(input)))
 
