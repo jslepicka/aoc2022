@@ -37,7 +37,7 @@ def build_tree(nodes, name):
         left, op, right = n.job.split()
         n.left = nodes[left]
         build_tree(nodes, left)
-        n.right = nodes[right]
+        n.right = nodes[right] 
         build_tree(nodes, right)
         n.op = op
 
@@ -59,7 +59,6 @@ def part2(nodes):
     test_val = 1
     prev_sign = None
     inc = 1
-    init_sign = None
     #correct value for part2 is 3343167719435, but this value passes if integer division is used in node
     #nodes['humn'].value=3343167719440
     #print(nodes['root'].left.calc())
@@ -67,19 +66,17 @@ def part2(nodes):
     while True:
         nodes['humn'].value = test_val
         human_val = int(human_path.calc())
-        if human_val == monkey_val:
+        diff = human_val - monkey_val
+        #print(f'test_val:{test_val} diff:{diff}')
+        if diff == 0:
             return test_val
         else:
-            diff = human_val - monkey_val
-            #print(f'{diff} test {test_val}')
             sign = diff < 0
-            if init_sign is None:
-                init_sign = sign
             if prev_sign is not None:
                 if sign == prev_sign: #sign hasn't changed, double increment
                     inc *= 2
                 else:
-                    inc = 1 if sign==init_sign else -1
+                    inc = 1 if inc < 0 else -1
             test_val += inc
             prev_sign = sign
     return None
