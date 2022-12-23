@@ -63,16 +63,10 @@ def solve(elves, round_limit=None):
             if elves[e] is None:
                 elves[e] = e
 
-        #count number of moves
-        num_moves = 0
-        for e in elves:
-            if elves[e] != e:
-                num_moves += 1
-
         #now we have proposed moves
         next_elves = {}
         for e in elves:
-            if proposed_locs[elves[e]] > 1:
+            if proposed_locs.get(elves[e], 0) > 1:
                 #two elves proposing same location, don't move
                 next_elves[e] = None
             else:
@@ -88,7 +82,7 @@ def solve(elves, round_limit=None):
             height = y_max - y_min + 1
             empty = width * height - len(elves)
             return empty
-        elif round_limit is None and num_moves == 0:
+        elif round_limit is None and len(proposed_locs) == 0:
             return round
 
 def part1(elves):
