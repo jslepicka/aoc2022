@@ -22,11 +22,10 @@ def solve(elves, round_limit=None):
         [(0, -1), (1, -1), (-1, -1)],   # N, NE, NE
         [(0, 1), (1, 1), (-1, 1)],      # S, SE, SW
         [(-1, 0), (-1, -1), (-1, 1)],   # W, NW, SW
-        [(1, 0), (1, -1), (1, 1)]      # E, NE, SE
+        [(1, 0), (1, -1), (1, 1)]       # E, NE, SE
     ]
-    elf_moved = True
-    round = 0
 
+    round = 0
     while True:
         round += 1
         proposed_locs = defaultdict(int)
